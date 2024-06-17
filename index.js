@@ -38,7 +38,7 @@ try
         });
     }
 
-    if(outputJson.length > 0)
+    if(Object.keys(outputJson).length !== 0)
     {
         fs.writeFileSync(
             outFile,
