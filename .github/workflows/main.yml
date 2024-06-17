@@ -1,9 +1,56 @@
 on: [push]
 
 jobs:
-  plugin_json:
+  empty_data:
     runs-on: ubuntu-latest
-    name: Test merging some JSON files
+    name: Test for no output file with no input data
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Test
+        uses: ./
+        with:
+          out-file: output.json
+
+      - name: xxx
+        shell: bash
+        run: |
+          if [ -f 'output.json' ]; then
+            echo "There is still an output file, this is incorrect"
+            exit 1
+          else
+            echo "No output file"
+          fi
+  file_to_file:
+    runs-on: ubuntu-latest
+    name: Test just copying the file
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Test
+        uses: ./
+        with:
+          in-file: test/file.json
+          out-file: output_single.json
+
+      - name: Print output
+        shell: bash
+        run: |
+          wc -c < output_single.json
+          cat output_single.json
+          echo
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: output
+          path: output_single.json
+
+  json_merging:
+    runs-on: ubuntu-latest
+    name: Test merging logic
     steps:
       - name: Checkout
         uses: actions/checkout@v4

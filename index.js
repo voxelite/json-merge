@@ -14,13 +14,13 @@ try
 
     let outputJson = JSON.constructor();
 
-    if(inFile !== undefined)
+    if(typeof inFile === "string" && inFile !== '')
     {
         const fileData = fs.readFileSync(inFile, 'utf8');
         outputJson = JSON.parse(fileData);
     }
 
-    if(inDirectory !== undefined)
+    if(typeof inDirectory === "string" && inDirectory !== '')
     {
         fs.readdirSync(inDirectory).forEach(filename => {
             if(!filename.endsWith(".json"))
@@ -38,6 +38,7 @@ try
         });
     }
 
+    if(outputJson.length > 0)
     {
         fs.writeFileSync(
             outFile,
