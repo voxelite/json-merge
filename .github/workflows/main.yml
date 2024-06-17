@@ -45,7 +45,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: output
+          name: output_single
           path: output_single.json
 
   json_merging:
