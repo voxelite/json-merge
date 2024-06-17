@@ -1,0 +1,29 @@
+on: [push]
+
+jobs:
+  plugin_json:
+    runs-on: ubuntu-latest
+    name: Test merging some JSON files
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Test
+        uses: ./
+        with:
+          in-file: test/file.json
+          in-directory: test/file
+          out-file: output.json
+
+      - name: Print output
+        shell: bash
+        run: |
+          wc -c < output.json
+          cat output.json
+          echo
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: output
+          path: output.json

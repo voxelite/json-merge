@@ -1,0 +1,13 @@
+name: 'Voxelite JSON Merger'
+description: 'Merge JSON and separate JSONs into a single file, works for blocks, items...'
+inputs:
+  in-file:
+    description: 'Main file to use as a source'
+  in-directory:
+    description: 'Directory from which to process separate JSON files'
+  out-file:
+    description: 'Merged JSON file'
+    required: true
+runs:
+  using: 'node20'
+  main: 'index.js'
