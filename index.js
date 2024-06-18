@@ -7,6 +7,8 @@ const inFile = core.getInput('in-file');
 const inDirectory = core.getInput('in-directory');
 const outFile = core.getInput('out-file');
 
+const nameRegex = /^[a-zA-Z]([_a-zA-Z0-9]?[a-zA-Z0-9])*$/
+
 try
 {
     core.info("inFile: " + inFile);
@@ -22,6 +24,19 @@ try
         {
             const fileData = fs.readFileSync(inFile, 'utf8');
             outputJson = JSON.parse(fileData);
+
+            // Validate object names
+            let anyFailed = false;
+            Object.keys(outputJson).forEach(key =>
+            {
+                if(!nameRegex.test(key))
+                {
+                    core.error(`Object name ${key} from ${inFile} is not a valid object name`);
+                    anyFailed = true;
+                }
+            });
+            if(anyFailed)
+                return;
         }
         else
             core.error("inDirectory " + inDirectory + " does not exist");
@@ -36,14 +51,24 @@ try
                 if (!filename.endsWith(".json"))
                     return;
 
-                const filenameWithoutExtension = filename.substring(0, filename.length - ".json".length);
-                if (!outputJson.hasOwnProperty(filenameWithoutExtension)) {
-                    core.error(filenameWithoutExtension + " is already defined (in " + inFile + ")");
+                const objectName = filename.substring(0, filename.length - ".json".length);
+
+                // Validate name usability
+                if(!nameRegex.test(objectName))
+                {
+                    core.error(objectName + " is invalid name for an object");
+                    return;
+                }
+
+                // Check for duplicates
+                if (!outputJson.hasOwnProperty(objectName))
+                {
+                    core.error(objectName + " is already defined (in " + inFile + ")");
                     return;
                 }
 
                 const fileData = fs.readFileSync(inDirectory + '/' + filename, {encoding: 'utf8', flag: 'r'});
-                outputJson[filenameWithoutExtension] = JSON.parse(fileData);
+                outputJson[objectName] = JSON.parse(fileData);
             });
         }
         else
@@ -62,7 +87,6 @@ try
             { encoding: 'utf8', flag: 'w' }
         );
     }
-
 }
 catch(error)
 {
