@@ -1,6 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const fs = require('fs');
+const path = require('path');
 
 const inFile = core.getInput('in-file');
 const inDirectory = core.getInput('in-directory');
@@ -14,6 +15,7 @@ try
 
     let outputJson = JSON.constructor();
 
+    // Multi-object file
     if(typeof inFile === "string" && inFile !== '')
     {
         if(fs.existsSync(inFile))
@@ -25,6 +27,7 @@ try
             core.error("inDirectory " + inDirectory + " does not exist");
     }
 
+    // Directory of single-object files
     if(typeof inDirectory === "string" && inDirectory !== '')
     {
         if(fs.existsSync(inDirectory))
@@ -47,8 +50,12 @@ try
             core.error("inDirectory " + inDirectory + " does not exist");
     }
 
-    if(Object.keys(outputJson).length !== 0)
+    // Output file
+    // Override existing file, create new only if we have data to write
+    if(!fs.existsSync(outputJson) || Object.keys(outputJson).length !== 0)
     {
+        fs.mkdirSync(path.dirname(outputJson), { recursive: true });
+
         fs.writeFileSync(
             outFile,
             JSON.stringify(outputJson, null, null),
