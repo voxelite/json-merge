@@ -77,9 +77,9 @@ try
 
     // Output file
     // Override existing file, create new only if we have data to write
-    if(!fs.existsSync(outputJson) || Object.keys(outputJson).length !== 0)
+    if(!fs.existsSync(outFile) || Object.keys(outputJson).length !== 0)
     {
-        fs.mkdirSync(path.dirname(outputJson), { recursive: true });
+        fs.mkdirSync(path.dirname(outFile), { recursive: true });
 
         fs.writeFileSync(
             outFile,
