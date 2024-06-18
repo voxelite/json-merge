@@ -13,7 +13,7 @@ jobs:
         with:
           out-file: output.json
 
-      - name: xxx
+      - name: Check output file presence
         shell: bash
         run: |
           if [ -f 'output.json' ]; then
@@ -22,6 +22,19 @@ jobs:
           else
             echo "No output file"
           fi
+  non_exist:
+    runs-on: ubuntu-latest
+    name: Test with non-existent file and directory on input
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Test
+        uses: ./
+        with:
+          in-file: asdf_file
+          in-directory: asdf_dir
+          out-file: output.json
 
   file_to_file:
     runs-on: ubuntu-latest

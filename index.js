@@ -39,7 +39,7 @@ try
                 return;
         }
         else
-            core.error("inDirectory " + inDirectory + " does not exist");
+            core.warning("inDirectory " + inDirectory + " does not exist");
     }
 
     // Directory of single-object files
@@ -72,7 +72,7 @@ try
             });
         }
         else
-            core.error("inDirectory " + inDirectory + " does not exist");
+            core.warning("inDirectory " + inDirectory + " does not exist");
     }
 
     // Output file
