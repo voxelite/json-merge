@@ -16,26 +16,35 @@ try
 
     if(typeof inFile === "string" && inFile !== '')
     {
-        const fileData = fs.readFileSync(inFile, 'utf8');
-        outputJson = JSON.parse(fileData);
+        if(fs.existsSync(inFile))
+        {
+            const fileData = fs.readFileSync(inFile, 'utf8');
+            outputJson = JSON.parse(fileData);
+        }
+        else
+            core.error("inDirectory " + inDirectory + " does not exist");
     }
 
     if(typeof inDirectory === "string" && inDirectory !== '')
     {
-        fs.readdirSync(inDirectory).forEach(filename => {
-            if(!filename.endsWith(".json"))
-                return;
+        if(fs.existsSync(inDirectory))
+        {
+            fs.readdirSync(inDirectory).forEach(filename => {
+                if (!filename.endsWith(".json"))
+                    return;
 
-            const filenameWithoutExtension = filename.substring(0, filename.length - ".json".length);
-            if(!outputJson.hasOwnProperty(filenameWithoutExtension))
-            {
-                core.error(filenameWithoutExtension + " is already defined (in " + inFile + ")");
-                return;
-            }
+                const filenameWithoutExtension = filename.substring(0, filename.length - ".json".length);
+                if (!outputJson.hasOwnProperty(filenameWithoutExtension)) {
+                    core.error(filenameWithoutExtension + " is already defined (in " + inFile + ")");
+                    return;
+                }
 
-            const fileData = fs.readFileSync(inDirectory + '/' + filename, { encoding: 'utf8', flag: 'r' });
-            outputJson[filenameWithoutExtension] = JSON.parse(fileData);
-        });
+                const fileData = fs.readFileSync(inDirectory + '/' + filename, {encoding: 'utf8', flag: 'r'});
+                outputJson[filenameWithoutExtension] = JSON.parse(fileData);
+            });
+        }
+        else
+            core.error("inDirectory " + inDirectory + " does not exist");
     }
 
     if(Object.keys(outputJson).length !== 0)
