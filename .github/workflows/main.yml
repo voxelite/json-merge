@@ -22,6 +22,7 @@ jobs:
           else
             echo "No output file"
           fi
+
   file_to_file:
     runs-on: ubuntu-latest
     name: Test just copying the file

@@ -27,7 +27,7 @@ try
                 return;
 
             const filenameWithoutExtension = filename.substring(0, filename.length - ".json".length);
-            if(outputJson[filenameWithoutExtension] !== undefined)
+            if(!outputJson.hasOwnProperty(filenameWithoutExtension))
             {
                 core.error(filenameWithoutExtension + " is already defined (in " + inFile + ")");
                 return;
